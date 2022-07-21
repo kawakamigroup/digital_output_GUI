@@ -167,6 +167,13 @@ class MainWindow(QMainWindow):
             else:
                 print(f"Error: Line {name} not closed")
                 
+        with nidaqmx.Task() as task: # creates a local task to close
+             task.do_channels.add_do_chan (
+                 "Dev1/port1/line0",  
+                 line_grouping=LineGrouping.CHAN_PER_LINE)
+             task.write(data, auto_start = True)
+             pp.pprint(data)
+                
         if totClose != len(data):
             print("All Lines Not Reset to False, Exit the Window and Restart")
         else:
